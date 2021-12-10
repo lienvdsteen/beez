@@ -5,6 +5,9 @@ require 'beez/Loggable'
 require 'beez/client'
 require 'beez/worker'
 require 'beez/version'
+require 'beez/api'
+require 'beez/o_auth_resource'
+require 'beez/access_token'
 
 module Beez
   extend ::Beez::Configurable

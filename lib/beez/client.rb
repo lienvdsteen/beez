@@ -5,8 +5,18 @@ module Beez
 
     attr_reader :client
 
-    def initialize(url: ::Beez.config.zeebe_url, opts: :this_channel_is_insecure)
+    def initialize(url: ::Beez.config.zeebe_url)
+      opts = :this_channel_is_insecure
+      opts = create_headers if Beez.config.use_access_token
       @client = ::Zeebe::Client::GatewayProtocol::Gateway::Stub.new(url, opts)
+    end
+
+    def create_headers
+      token = Beez::AccessToken.create
+      channel_creds = GRPC::Core::ChannelCredentials.new()
+      auth_proc = proc { { 'authorization' => "Bearer #{token.access_token}" } }
+      call_creds = GRPC::Core::CallCredentials.new(auth_proc)
+      channel_creds.compose(call_creds)
     end
 
     def activate_jobs(params = {})
