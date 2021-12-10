@@ -44,7 +44,7 @@
 * Beez has currently **not being tested in production**
 * Beez is currently lacking unit tests, any help is welcome!
 
-## Getting Started 🎓
+## Getting Started  🎓
 
 These instructions will help you get started with [Zeebe](https://zeebe.io/)
 and Beez. [Zeebe](https://zeebe.io/) already provides an extensive [documentation](https://docs.zeebe.io/)
@@ -52,9 +52,9 @@ I highly suggest you to check it out before.
 
 ### Prerequisites ☔️
 
-* You need [Zeebe up and running](https://docs.zeebe.io/introduction/install.html)
-* Ruby >= 2.5 & < 2.7
-* Rails >= 4 (optional)
+* You need [Zeebe up and running](https://docs.zeebe.io/introduction/install.html) or access to a remote Zeebe Cluster. 
+* Ruby >= 3.0.2
+* Rails >= 6 (optional)
 
 ### How It Works ⚙️
 
@@ -75,7 +75,7 @@ Running a workflow then requires two steps:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'beez', '~> 0.1'
+gem 'beez', '~> 0.2'
 ```
 
 And then execute:
@@ -122,6 +122,19 @@ from the root of your Rails application:
 bundle exec beez
 ```
 
+If you access your Zeebe Cluster with an access token:
+
+```ruby
+bundle exec beez \
+--timeout 5 \
+--require . \
+--use-access-token true --client-id $ZEEBE_CLIENT_ID \
+--client-secret $ZEEBE_CLIENT_SECRET \
+--zeebe-url $ZEEBE_URL \
+--zeebe-auth-url $ZEEBE_AUTHORIZATION_SERVER_URL \
+--audience $ZEEBE_AUDIENCE 
+```
+
 That's it.
 
 ### Configuration 🔧
@@ -141,6 +154,21 @@ Beez.configure do |config|
 end
 ````
 
+#### With Access Token
+If you need to do a connection with an access token (for example if you want to connect with Camunda Cloud Zeebe Cluster).
+
+```ruby
+Beez.configure do |config|
+  config.env = ENV['APP_ENV'] || ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'development'
+  config.logger = Logger.new($stdout)
+  config.require = '.'
+  config.timeout = 30
+  config.zeebe_url = ENV['ZEEBE_URL']
+  config.auth_url = ENV['ZEEBE_AUTHORIZATION_SERVER_URL']
+  config.use_access_token = true
+end
+```
+
 ### Example 📘
 
 Let's get the full picture by deploying the following workflow to Zeebe and
@@ -148,6 +176,7 @@ define simple workers as plain Ruby objects.
 
 ![Order Process](https://docs.zeebe.io/getting-started/img/tutorial-3.0-complete-workflow.png)
 
+#### If you don't have a Remote Zeebe Cluster:
 1. Start Zeebe and Zeebe Operate:
 
 ```sh
@@ -169,7 +198,7 @@ beez --timeout 5 --require examples/workers.rb
 
 4. Start an `irb` session:
 
-```sh
+```shell
 irb -r beez
 ```
 
@@ -183,6 +212,21 @@ irb -r beez
 2.6.6 :005 > # Watch Beez automatically executing the first task!
 2.6.6 :006 > # Publish a business message to simulate a payment received event
 2.6.6 :007 > Beez.client.publish_message(name: "payment-received", correlationKey: "1234")
+```
+
+#### If you do have a Remote Zeebe Cluster:
+
+You can skip step 1 and 2 but will need to start beez with the credentials:
+
+```shell
+bundle exec beez \
+--timeout 5 \
+--require examples/workers.rb \
+--use-access-token true --client-id $ZEEBE_CLIENT_ID \
+--client-secret $ZEEBE_CLIENT_SECRET \
+--zeebe-url $ZEEBE_URL \
+--zeebe-auth-url $ZEEBE_AUTHORIZATION_SERVER_URL \
+--audience $ZEEBE_AUDIENCE 
 ```
 
 That's it!
