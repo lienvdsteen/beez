@@ -177,7 +177,7 @@ irb -r beez
 
 ```ruby
 2.6.6 :001 > # Deploy a workflow to Zeebe
-2.6.6 :002 > Beez.client.deploy_workflow(workflows: [name: "order-process", type: :BPMN, definition: File.read('/path/to/beez/bpmn/order-process.bpmn')])
+2.6.6 :002 > Beez.client.deploy_process(processes: [name: "order-process", type: :BPMN, definition: File.read('/path/to/beez/bpmn/order-process.bpmn')])
 2.6.6 :003 > # Create a new instance of this workflow
 2.6.6 :004 > Beez.client.create_workflow_instance(bpmnProcessId: "order-process", version: 1, variables: { orderId: "1234", orderValue: 94 }.to_json)
 2.6.6 :005 > # Watch Beez automatically executing the first task!
