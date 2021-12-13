@@ -110,7 +110,7 @@ module Beez
           raise "Beez does not supports this version of Rails"
         else
           require File.expand_path("#{config.require}/config/environment.rb")
-          Dir[ Rails.root.join('app/jobs/**/*.rb')].each { |f| require f }
+          Dir[Rails.root.join('app/jobs/**/*.rb')].each { |f| require f }
 
           logger.info "Booted Rails #{::Rails.version} application in #{config.env} environment"
         end
