@@ -1,7 +1,7 @@
 module Beez
   class Configuration
 
-    attr_accessor :env, :logger, :require, :timeout, :zeebe_url, :use_access_token, :auth_url, :client_id, :client_secret, :audience
+    attr_accessor :env, :logger, :require, :timeout, :zeebe_url, :use_access_token, :auth_url, :client_id, :client_secret, :audience, :graphql_url
 
     def initialize
       @env = ENV["APP_ENV"] || ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "development"
@@ -14,6 +14,7 @@ module Beez
       @client_id = ENV['ZEEBE_CLIENT_ID']
       @client_secret = ENV['ZEEBE_CLIENT_SECRET']
       @audience = ENV['ZEEBE_AUDIENCE']
+      @graphql_url = ENV['GRAPHQL_URL']
     end
   end
 end

@@ -8,6 +8,8 @@ require 'beez/version'
 require 'beez/api'
 require 'beez/o_auth_resource'
 require 'beez/access_token'
+require 'beez/graph_ql'
+require 'beez/user_tasks'
 
 module Beez
   extend ::Beez::Configurable
