@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+module Beez
   class UserTasks
     def self.all
       query = "{
