@@ -44,6 +44,10 @@ module Beez
           config.env = arg
         end
 
+        p.on "-i", "--client-id CLIENT_ID", "Client ID" do |arg|
+          config.client_id = arg
+        end
+
         p.on "-r", "--require [PATH|DIR]", "Location of Rails application with workers or file to require" do |arg|
           if !File.exist?(arg) ||
               (File.directory?(arg) && !File.exist?("#{arg}/config/application.rb"))
@@ -51,6 +55,26 @@ module Beez
           else
             config.require = arg
           end
+        end
+
+        p.on "-s", "--client-secret CLIENT_SECRET", "Client Secret" do |arg|
+          config.client_secret = arg
+        end
+
+        p.on "-u", "--zeebe-url ZEEBE_URL", "Zeebe URL" do |arg|
+          config.zeebe_url = arg
+        end
+
+        p.on "-U", "--zeebe-auth-url ZEEBE_AUTH_URL", "Zeebe Authorization Server URL" do |arg|
+          config.auth_url = arg
+        end
+
+        p.on "-a", "--audience URL", "Zeebe Audience" do |arg|
+          config.audience = arg
+        end
+
+        p.on "-T", "--use-access-token STRING", "Zeebe Audience" do |arg|
+          config.use_access_token = arg.to_s.downcase == 'true'
         end
 
         p.on "-t", "--timeout NUM", "Shutdown timeout" do |arg|
@@ -82,10 +106,12 @@ module Beez
 
       if File.directory?(config.require)
         require 'rails'
-        if ::Rails::VERSION::MAJOR < 4
+        if ::Rails::VERSION::MAJOR < 6
           raise "Beez does not supports this version of Rails"
         else
           require File.expand_path("#{config.require}/config/environment.rb")
+          Dir[Rails.root.join('app/jobs/**/*.rb')].each { |f| require f }
+
           logger.info "Booted Rails #{::Rails.version} application in #{config.env} environment"
         end
       else

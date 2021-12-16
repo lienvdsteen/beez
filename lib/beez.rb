@@ -1,10 +1,15 @@
 require 'concurrent'
 
 require 'beez/configurable'
-require 'beez/Loggable'
+require 'beez/loggable'
 require 'beez/client'
 require 'beez/worker'
 require 'beez/version'
+require 'beez/api'
+require 'beez/o_auth_resource'
+require 'beez/access_token'
+require 'beez/graph_ql'
+require 'beez/user_tasks'
 
 module Beez
   extend ::Beez::Configurable

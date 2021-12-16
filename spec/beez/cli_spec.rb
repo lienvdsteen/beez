@@ -50,5 +50,17 @@ RSpec.describe Beez::CLI do
         expect(Beez.logger.level).to eq(Logger::DEBUG)
       end
     end
+
+    describe 'client-id' do
+      it 'accepts with -i' do
+        subject.parse(%w[beez -i something])
+        expect(Beez.config.client_id).to eq('something')
+      end
+
+      it 'accepts with --client-id' do
+        subject.parse(%w[beez --client-id something])
+        expect(Beez.config.client_id).to eq('something')
+      end
+    end
   end
 end
